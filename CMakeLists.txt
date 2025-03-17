@@ -6,6 +6,8 @@ cmake_minimum_required(VERSION 3.10)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+project(PassHash CXX)
+
 check_include_files(crypt.h HAS_CRYPT)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
@@ -17,9 +19,7 @@ if(NOT HAS_CRYPT)
 	)
 endif()
 
-project(PassHash)
-
-add_library(PassHash pash_hash.cpp)
+add_library(PassHash pass_hash.cpp)
 if(NOT HAS_CRYPT)
 	target_link_libraries(PassHash ow_crypt)
 endif()
