@@ -19,8 +19,17 @@ if(NOT HAS_CRYPT)
 	)
 endif()
 
-add_library(PassHash pass_hash.cpp)
-target_include_directories(PassHash PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-if(NOT HAS_CRYPT)
-	target_link_libraries(PassHash ow_crypt)
+if(HAS_CRYPT)
+	add_library(PassHash pass_hash.cpp include/pass_hash.hpp)
+else()
+	add_library(
+		PassHash
+		pass_hash.cpp
+		include/pass_hash.hpp
+		${ow_crypt_SOURCE_DIR}/crypt_blowfish.c
+		${ow_crypt_SOURCE_DIR}/crypt_gensalt.c
+		${ow_crypt_SOURCE_DIR}/wrapper.c
+		${ow_crypt_SOURCE_DIR}/x86.S
+	)
 endif()
+target_include_directories(PassHash PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
