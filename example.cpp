@@ -4,19 +4,25 @@
 #include "pass_hash.hpp"
 
 int main() {
+	// include the time unit suffixes
     using namespace std::chrono_literals;
+
+	// the first password
     std::string password;
     std::cin >> password;
-    unsigned long count = PassHash::get_minimum_count("$2b$", 250ms);
-    std::chrono::steady_clock clock;
-    auto start = clock.now();
+
+	// get the count needed for hashing to take 250ms
+    unsigned long count = PassHash::get_minimum_count(PassHash::AlgoPrefixes::BCRYPT, 250ms);
+
+	// get the hash of the first password
     std::string hash_1 = PassHash::hash_password(password, "$2b$", count);
-    auto end = clock.now();
-    std::chrono::duration<double, std::milli> time_taken = end - start;
-    std::cout << time_taken.count() << std::endl;
     std::cout << hash_1 << std::endl;
+
+	// the second password
     std::string password2;
     std::cin >> password2;
+
+	// print :) if the passwords match, otherwise :(
     if (PassHash::check_password(password2, hash_1)) {
         std::cout << ":)" << std::endl;
     } else {
