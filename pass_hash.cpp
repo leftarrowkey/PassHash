@@ -1,8 +1,13 @@
+#include "config.h"
 #include "pass_hash.hpp"
 #include <cerrno>
 #include <chrono>
 #include <cmath>
+#ifdef HAS_CRYPT
+#include <ow-crypt.h>
+#else
 #include <crypt.h>
+#endif
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
