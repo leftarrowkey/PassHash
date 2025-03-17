@@ -20,7 +20,7 @@ if(NOT HAS_CRYPT)
 endif()
 
 add_library(PassHash pass_hash.cpp)
-target_include_directories(PassHash PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(PassHash PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 if(NOT HAS_CRYPT)
 	target_link_libraries(PassHash ow_crypt)
 endif()
