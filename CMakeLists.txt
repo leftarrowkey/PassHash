@@ -20,10 +20,10 @@ if(NOT HAS_CRYPT)
 endif()
 
 if(HAS_CRYPT)
-	add_library(PassHash pass_hash.cpp include/pass_hash.hpp)
+	add_library(PassHash INTERFACE pass_hash.cpp include/pass_hash.hpp)
 else()
 	add_library(
-		PassHash
+		PassHash INTERFACE
 		pass_hash.cpp
 		include/pass_hash.hpp
 		${ow_crypt_SOURCE_DIR}/crypt_blowfish.c
@@ -32,4 +32,4 @@ else()
 		${ow_crypt_SOURCE_DIR}/x86.S
 	)
 endif()
-target_include_directories(PassHash PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(PassHash INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
