@@ -14,12 +14,13 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DI
 if(NOT HAS_CRYPT)
 	FetchContent_Declare(
 		ow_crypt
-		GIT_REPOSITORY https://github.com/openwall/crypt_blowfish
+		GIT_REPOSITORY https://github.com/openwall/crypt_blowfish.git
 		GIT_TAG        3354bb81eea489e972b0a7c63231514ab34f73a0
 	)
 endif()
 
 add_library(PassHash pass_hash.cpp)
+target_include_directories(PassHash PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 if(NOT HAS_CRYPT)
 	target_link_libraries(PassHash ow_crypt)
 endif()
