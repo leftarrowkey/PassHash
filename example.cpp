@@ -15,7 +15,7 @@ int main() {
     unsigned long count = PassHash::get_minimum_count(PassHash::AlgoPrefixes::BCRYPT, 250ms);
 
 	// get the hash of the first password
-    std::string hash_1 = PassHash::hash_password(password, "$2b$", count);
+    std::string hash_1 = PassHash::hash_password(password, PassHash::AlgoPrefixes::BCRYPT, count);
     std::cout << hash_1 << std::endl;
 
 	// the second password
