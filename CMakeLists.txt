@@ -21,6 +21,7 @@ endif()
 
 if(HAS_CRYPT)
 	add_library(PassHash pass_hash.cpp)
+	target_link_libraries(PassHash crypt)
 else()
 	add_library(
 		PassHash
