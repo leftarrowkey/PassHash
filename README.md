@@ -7,7 +7,7 @@ g++ -I./pass_hash example.cpp pass_hash/pass_hash.cpp
 ```
 
 this can be downloaded with CMake like this:
-```
+```cmake
 include(FetchContent)
 
 FetchContent_Declare(
