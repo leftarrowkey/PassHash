@@ -5,3 +5,22 @@ e.g.
 ```
 g++ -I./pass_hash example.cpp pass_hash/pass_hash.cpp
 ```
+
+this can be downloaded with CMake like this:
+```
+include(FetchContent)
+
+FetchContent_Declare(
+  pass_hash
+  GIT_REPOSITORY https://github.com/leftarrowkey/PassHash.git
+  GIT_TAG        origin/main
+)
+
+FetchContent_MakeAvailable(pass_hash)
+
+# or whatever your executable is
+add_executable(cmake_test main.cpp)
+
+target_link_libraries(cmake_test PassHash)
+
+```
