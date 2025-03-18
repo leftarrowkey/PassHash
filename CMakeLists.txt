@@ -8,10 +8,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 project(PassHash CXX)
 
+option(FORCE_OW_CRYPT)
+
 check_include_files(crypt.h HAS_CRYPT)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-if(NOT HAS_CRYPT)
+if(NOT HAS_CRYPT OR FORCE_OW_CRYPT)
+	message("using ow crypt")
 	FetchContent_Declare(
 		ow_crypt
 		GIT_REPOSITORY https://github.com/openwall/crypt_blowfish.git
@@ -19,7 +22,7 @@ if(NOT HAS_CRYPT)
 	)
 endif()
 
-if(HAS_CRYPT)
+if(HAS_CRYPT AND NOT FORCE_OW_CRYPT)
 	add_library(PassHash pass_hash.cpp)
 	target_link_libraries(PassHash crypt)
 else()
