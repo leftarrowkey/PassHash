@@ -5,8 +5,8 @@
 #include <cmath>
 #ifndef HAS_CRYPT
 #define NEED_OW 1
-#define CRYPT_GENSALT_OUTPUT_SIZE 16
-#define CRYPT_OUTPUT_SIZE 23
+#define CRYPT_GENSALT_OUTPUT_SIZE 30
+#define CRYPT_OUTPUT_SIZE 61
 #include <ow-crypt.h>
 #include <random>
 #else
@@ -40,9 +40,9 @@ std::string PassHash::generate_setting(const char *prefix,
 	int nrbytes = sizeof(rbytes);
 	#endif
     char salt[CRYPT_GENSALT_OUTPUT_SIZE];
-    crypt_gensalt_rn(prefix, count, rbytes, nrbytes, salt,
+    auto result = crypt_gensalt_rn(prefix, count, rbytes, nrbytes, salt,
                      CRYPT_GENSALT_OUTPUT_SIZE);
-    if (errno != 0) {
+    if (!result) {
         std::cerr << errno << std::endl;
         std::perror("failed to generate salt");
     }
@@ -56,8 +56,8 @@ std::string PassHash::generate_hash(std::string password, std::string setting) {
 	#else
 	char result[CRYPT_OUTPUT_SIZE] = "";
 	#endif
-    crypt_rn(password.c_str(), setting.c_str(), result, sizeof(*result));
-    if (errno != 0) {
+    auto noterror = crypt_rn(password.c_str(), setting.c_str(), result, sizeof(*result));
+    if (!noterror) {
         std::cout << errno << std::endl;
         std::perror("hashing failed");
     }
