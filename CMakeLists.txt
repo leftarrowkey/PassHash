@@ -11,7 +11,7 @@ project(PassHash CXX)
 option(FORCE_OW_CRYPT OFF)
 
 check_include_files(crypt.h HAS_CRYPT)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 
 if(HAS_CRYPT AND NOT FORCE_OW_CRYPT)
 	add_library(PassHash pass_hash.cpp)

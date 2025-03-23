@@ -1,5 +1,4 @@
 #include "config.h"
-#include <algorithm>
 #include <pass_hash.hpp>
 #include <cerrno>
 #include <chrono>
