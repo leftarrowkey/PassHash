@@ -1,11 +1,17 @@
 #include "config.h"
+#include <algorithm>
 #include <pass_hash.hpp>
 #include <cerrno>
 #include <chrono>
 #include <cmath>
-#ifdef HAS_CRYPT
+#ifndef HAS_CRYPT
+#define NEED_OW 1
+#define CRYPT_GENSALT_OUTPUT_SIZE 16
+#define CRYPT_OUTPUT_SIZE 23
 #include <ow-crypt.h>
+#include <random>
 #else
+#define NEED_OW 0
 #include <crypt.h>
 #endif
 #include <cstdio>
@@ -20,8 +26,22 @@ const unsigned long MINIMUM_COST = 11;
 
 std::string PassHash::generate_setting(const char *prefix,
                                        unsigned long count) {
+	#ifdef HAS_CRYPT
+	// the normal setup, to let libxcrypt get random bytes itself
+	const char* rbytes = nullptr;
+	int nrbytes = 0;
+	#else
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<unsigned int> dist(0, 255);
+	char rbytes[CRYPT_GENSALT_OUTPUT_SIZE];
+	for (int i = 0; i < sizeof(rbytes); ++i) {
+		rbytes[i] = static_cast<char>(dist(gen));
+	}
+	int nrbytes = sizeof(rbytes);
+	#endif
     char salt[CRYPT_GENSALT_OUTPUT_SIZE];
-    crypt_gensalt_rn(prefix, count, nullptr, 0, salt,
+    crypt_gensalt_rn(prefix, count, rbytes, nrbytes, salt,
                      CRYPT_GENSALT_OUTPUT_SIZE);
     if (errno != 0) {
         std::cerr << errno << std::endl;
@@ -32,14 +52,22 @@ std::string PassHash::generate_setting(const char *prefix,
 }
 
 std::string PassHash::generate_hash(std::string password, std::string setting) {
-    crypt_data *result = new crypt_data();
+	#ifdef HAS_CRYPT
+	crypt_data *result = new crypt_data();
+	#else
+	char result[CRYPT_OUTPUT_SIZE] = "";
+	#endif
     crypt_rn(password.c_str(), setting.c_str(), result, sizeof(*result));
     if (errno != 0) {
         std::cout << errno << std::endl;
         std::perror("hashing failed");
     }
+	#ifdef HAS_CRYPT
     std::string hash(result->output);
     delete result;
+	#else
+	std::string hash(result);
+	#endif
     return hash;
 }
 

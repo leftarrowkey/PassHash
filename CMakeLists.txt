@@ -32,6 +32,9 @@ else()
 		${ow_crypt_SOURCE_DIR}/wrapper.c
 		${ow_crypt_SOURCE_DIR}/x86.S
 	)
+	target_include_directories(
+		PassHash PRIVATE ${ow_crypt_SOURCE_DIR}
+	)
 endif()
 target_include_directories(
 	PassHash PUBLIC
